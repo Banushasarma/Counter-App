@@ -1,11 +1,11 @@
 import './App.css';
-import Counter from './components/counter'
+import Movies from './components/movies';
 
 function App() {
   return (
-    <div>
-      <Counter />
-    </div>
+    <main className="container">
+      <Movies></Movies>
+    </main>
   );
 }
 
