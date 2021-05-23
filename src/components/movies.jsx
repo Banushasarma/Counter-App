@@ -1,11 +1,29 @@
+import _ from "lodash";
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
-import Like from "./common/like";
+import { getGenres } from "../services/fakeGenreService";
+import Pagination from "./common/pagination";
+import ListGroup from "./common/listGroup";
+import MovieTable from "./movieTable";
+import { paginate } from "../Utils/paginate";
 
 class Movies extends Component {
   state = {
-    movies: getMovies(),
+    movies: [],
+    generes: [],
+    pageSize: 4,
+    currentPage: 1,
+    selectedGenere: {},
+    sortColumn: { path: "title", order: "asc" },
   };
+
+  componentDidMount() {
+    const generes = [{ _id: "", name: "All Generes" }, ...getGenres()];
+    this.setState({
+      movies: getMovies(),
+      generes,
+    });
+  }
 
   handleDelete = (_id) => {
     this.setState({
@@ -21,55 +39,79 @@ class Movies extends Component {
     this.setState({
       movies,
     });
-    console.log("liked", movie);
+  };
+
+  handlePageChanged = (page) => {
+    this.setState({
+      currentPage: page,
+    });
+  };
+
+  handleGenereSelect = (item) => {
+    this.setState({ selectedGenere: item, currentPage: 1 });
+  };
+
+  handleSort = (sortColumn) => {
+    this.setState({
+      sortColumn,
+    });
+  };
+
+  getPageData = () => {
+    const {
+      pageSize,
+      currentPage,
+      movies: allMovies,
+      selectedGenere,
+      sortColumn,
+    } = this.state;
+
+    const filtered =
+      selectedGenere && selectedGenere._id
+        ? allMovies.filter((m) => m.genre._id === selectedGenere._id)
+        : allMovies;
+
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize);
+
+    return { totalCount: filtered.length, data: movies };
   };
 
   render() {
     const { length: count } = this.state.movies;
+    const { pageSize, currentPage, sortColumn } = this.state;
+
     if (count === 0) return <p>There no movie records in database.</p>;
 
+    const { totalCount, data } = this.getPageData();
+
     return (
-      <React.Fragment>
-        <p>Showing {count} movies in the database</p>
-        <table className="table table-striped table-hover">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Genere</th>
-              <th>Stock</th>
-              <th>Rate</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.state.movies.map((movie) => (
-              <tr key={movie._id}>
-                <td>{movie.title}</td>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <Like
-                    liked={movie.liked}
-                    onClick={() => this.handleLike(movie)}
-                    movie={movie}
-                  />
-                </td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => this.handleDelete(movie._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr></tr>
-          </tbody>
-        </table>
-      </React.Fragment>
+      <div className="row m-3">
+        <div className="col-2">
+          <ListGroup
+            listItems={this.state.generes}
+            selectedGenere={this.state.selectedGenere}
+            onItemSelect={this.handleGenereSelect}
+          />
+        </div>
+        <div className="col">
+          <p>Showing {totalCount} movies in the database</p>
+          <MovieTable
+            movies={data}
+            onLike={this.handleLike}
+            onDelete={this.handleDelete}
+            onSort={this.handleSort}
+            sortColumn={sortColumn}
+          />
+          <Pagination
+            itemsCount={totalCount}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChanged={this.handlePageChanged}
+          />
+        </div>
+      </div>
     );
   }
 }
