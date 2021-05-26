@@ -4,10 +4,13 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
-import Movies from './components/movies';
+import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-  <Movies />,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

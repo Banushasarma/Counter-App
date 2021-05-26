@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 import Counters from './components/counters';
 import Navbar from './components/navbar';
+import { Link, Route, Switch, Redirect } from 'react-router-dom'
+import Home from './components/HomeComponent';
+import Products from './components/products';
+import ProductDetails from './components/productDetails';
+import Posts from './components/posts';
+import NotFound from './components/notFound';
 
 class App extends Component {
   state = {
@@ -49,10 +55,37 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length} />
-        <main className="container">
+        <div className="content">
+          <ul>
+            <li>
+              <Link to="/home">Home</Link>
+            </li>
+            <li>
+              <Link to="/products">Products</Link>
+            </li>
+            <li>
+              <Link to="/posts/2021/05">Posts</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route path="/products" render={(props) => <Products sortBy="Newest" {...this.props} />}></Route>
+            <Route path="/home" component={Home}></Route>
+            <Route path="/productdetails/:id" component={ProductDetails}></Route>
+
+            <Route path="/posts/:year?/:month?" component={Posts}></Route>
+
+            <Redirect from="/messages" to="/posts" />
+            <Route path="/not-found" component={NotFound}></Route>
+            <Route path="/" exact component={Home}></Route>
+            <Redirect to="/not-found" />
+          </Switch>
+        </div>
+
+
+        {/*<Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length} />
+         <main className="container">
           <Counters counters={this.state.counters} onReset={this.handleReset} onDelete={this.handleDelete} onIncrement={this.handleIncrement} onDecrement={this.handleDecrement} />
-        </main>
+        </main> */}
       </React.Fragment >
     );
   }
