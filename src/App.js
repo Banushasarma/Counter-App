@@ -8,6 +8,8 @@ import Products from './components/products';
 import ProductDetails from './components/productDetails';
 import Posts from './components/posts';
 import NotFound from './components/notFound';
+import Dashboard from './components/admin/dashboard';
+
 
 class App extends Component {
   state = {
@@ -66,6 +68,9 @@ class App extends Component {
             <li>
               <Link to="/posts/2021/05">Posts</Link>
             </li>
+            <li>
+              <Link to="/admin">Admin</Link>
+            </li>
           </ul>
           <Switch>
             <Route path="/products" render={(props) => <Products sortBy="Newest" {...this.props} />}></Route>
@@ -75,6 +80,11 @@ class App extends Component {
             <Route path="/posts/:year?/:month?" component={Posts}></Route>
 
             <Redirect from="/messages" to="/posts" />
+
+
+            <Route path="/admin" component={Dashboard}></Route>
+
+
             <Route path="/not-found" component={NotFound}></Route>
             <Route path="/" exact component={Home}></Route>
             <Redirect to="/not-found" />
