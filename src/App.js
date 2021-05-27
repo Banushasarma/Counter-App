@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import './App.css';
-import Counters from './components/counters';
-import Navbar from './components/navbar';
-import { Link, Route, Switch, Redirect } from 'react-router-dom'
-import Home from './components/HomeComponent';
-import Products from './components/products';
-import ProductDetails from './components/productDetails';
-import Posts from './components/posts';
+import { Route, Switch, Redirect } from 'react-router-dom'
+import Movies from './components/movies';
 import NotFound from './components/notFound';
-import Dashboard from './components/admin/dashboard';
+import Customers from './components/customers';
+import Rentals from './components/rentals';
+import MovieNavBar from './components/movieNavBar';
+import MovieDetails from './components/movieDetails';
+import './App.css';
+
 
 
 class App extends Component {
@@ -57,36 +56,15 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="content">
-          <ul>
-            <li>
-              <Link to="/home">Home</Link>
-            </li>
-            <li>
-              <Link to="/products">Products</Link>
-            </li>
-            <li>
-              <Link to="/posts/2021/05">Posts</Link>
-            </li>
-            <li>
-              <Link to="/admin">Admin</Link>
-            </li>
-          </ul>
+        <MovieNavBar />
+        <div className="container">
           <Switch>
-            <Route path="/products" render={(props) => <Products sortBy="Newest" {...this.props} />}></Route>
-            <Route path="/home" component={Home}></Route>
-            <Route path="/productdetails/:id" component={ProductDetails}></Route>
-
-            <Route path="/posts/:year?/:month?" component={Posts}></Route>
-
-            <Redirect from="/messages" to="/posts" />
-
-
-            <Route path="/admin" component={Dashboard}></Route>
-
-
-            <Route path="/not-found" component={NotFound}></Route>
-            <Route path="/" exact component={Home}></Route>
+            <Route path="/movies/:id" component={MovieDetails} />
+            <Route path="/movies" component={Movies} />
+            <Route path="/customers" component={Customers} />
+            <Route path="/rentals" component={Rentals} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect from="/" exact to="/movies" />
             <Redirect to="/not-found" />
           </Switch>
         </div>
