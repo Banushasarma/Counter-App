@@ -6,6 +6,9 @@ import Customers from './components/customers';
 import Rentals from './components/rentals';
 import MovieNavBar from './components/movieNavBar';
 import MovieDetails from './components/movieDetails';
+import LoginForm from './components/loginForm';
+import RegisterForm from './components/common/registerForm';
+
 import './App.css';
 
 
@@ -59,7 +62,10 @@ class App extends Component {
         <MovieNavBar />
         <div className="container">
           <Switch>
+            <Route path="/register" component={RegisterForm} />
+            <Route path="/login" component={LoginForm} />
             <Route path="/movies/:id" component={MovieDetails} />
+            <Route path="/movies/new" component={MovieDetails} />
             <Route path="/movies" component={Movies} />
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
