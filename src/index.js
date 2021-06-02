@@ -6,7 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
+import logService from "./services/logService";
 
+logService.init();
 ReactDOM.render(
   <BrowserRouter>
     <App />

@@ -8,8 +8,11 @@ import MovieNavBar from './components/movieNavBar';
 import MovieDetails from './components/movieDetails';
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/common/registerForm';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import './App.css';
+import httpDemo from './components/httpDemo';
 
 
 
@@ -59,10 +62,12 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
+        <ToastContainer />
         <MovieNavBar />
         <div className="container">
           <Switch>
             <Route path="/register" component={RegisterForm} />
+            <Route path="/httpdemo" component={httpDemo} />
             <Route path="/login" component={LoginForm} />
             <Route path="/movies/:id" component={MovieDetails} />
             <Route path="/movies/new" component={MovieDetails} />

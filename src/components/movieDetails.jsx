@@ -1,8 +1,8 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import { getGenres } from "../services/fakeGenreService";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
+import { getGenres } from "../services/genreService";
+import { getMovie, saveMovie } from "../services/movieService";
 
 class MovieDetails extends Form {
   state = {
@@ -18,8 +18,8 @@ class MovieDetails extends Form {
   };
 
   schema = {
-    _id: Joi.string(),
-    title: Joi.string().required().label("Title"),
+    _id: Joi.string().label("Movie Id").allow(""),
+    title: Joi.string().min(5).required().label("Title"),
     genreId: Joi.string().required().label("Genre"),
     numberInStock: Joi.number()
       .min(1)
@@ -38,22 +38,26 @@ class MovieDetails extends Form {
     this.props.history.push("/movies");
   };
 
-  componentDidMount() {
-    const genres = getGenres();
-    this.setState({
-      genres,
-    });
+  async populateGenres() {
+    const { data: genres } = await getGenres();
+    this.setState({ genres });
+  }
 
-    const movieId = this.props.match.params.id;
-    if (movieId === "new") return;
+  async populateMovies() {
+    try {
+      const movieId = this.props.match.params.id;
+      if (movieId === "new") return;
+      const { data: movie } = await getMovie(movieId);
+      this.setState({ data: this.mapToViewModel(movie) });
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        return this.props.history.replace("/not-found");
+    }
+  }
 
-    const movie = getMovie(movieId);
-    if (!movie) return this.props.history.replace("/not-found");
-
-    // const datas = ;
-    this.setState({
-      data: this.mapToViewModel(movie),
-    });
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovies();
   }
 
   mapToViewModel(movie) {
@@ -67,7 +71,6 @@ class MovieDetails extends Form {
   }
 
   render() {
-    console.log(this.state.data);
     return (
       <div>
         <h1>Movie Form</h1>
