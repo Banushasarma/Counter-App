@@ -8,6 +8,7 @@ import MovieTable from "./movieTable";
 import { paginate } from "../Utils/paginate";
 import SearchBox from "./common/searchBox";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 class Movies extends Component {
   state = {
@@ -107,6 +108,7 @@ class Movies extends Component {
   render() {
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
+    const { user } = this.props;
 
     if (count === 0) return <p>There no movie records in database.</p>;
 
@@ -122,14 +124,11 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <button
-            className="btn btn-primary mb-2"
-            onClick={() => {
-              this.props.history.push("/movies/new");
-            }}
-          >
-            New Movie
-          </button>
+          {user && (
+            <Link to="/movies/new" className="btn btn-primary mb-2">
+              New Movie
+            </Link>
+          )}
           <p>Showing {totalCount} movies in the database</p>
           <SearchBox onChange={this.handleSearch} value={searchQuery} />
           <MovieTable
