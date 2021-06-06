@@ -1,11 +1,10 @@
 import httpService from "./httpService";
-import { apiUrl } from "../config.json";
 
 function movieUrl(movieId) {
-  return `${apiUrl}/movies/${movieId}`;
+  return `/movies/${movieId}`;
 }
 export function getMovies() {
-  return httpService.get(`${apiUrl}/movies`);
+  return httpService.get(`/movies`);
 }
 
 export function getMovie(movieId) {

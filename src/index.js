@@ -8,6 +8,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import logService from "./services/logService";
 
+console.log(process.env);
 logService.init();
 ReactDOM.render(
   <BrowserRouter>
