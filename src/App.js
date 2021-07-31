@@ -17,6 +17,13 @@ import auth from "./services/authService";
 
 import './App.css';
 import ProtectedRoute from './components/common/protectedRoute';
+import MovieHOC from './hoc/MovieHOC';
+import Counter from './hooks/counter';
+import Users from './hooks/users';
+import MoviePage from './context/MoviePage';
+
+import UserContext from './context/userContext';
+import Login from './context/Login';
 
 
 
@@ -28,7 +35,7 @@ class App extends Component {
       { id: 3, value: 0 },
       { id: 4, value: 0 },
     ],
-
+    currentUser: null
   };
 
   componentDidMount() {
@@ -68,13 +75,21 @@ class App extends Component {
 
   handleReset = () => { };
 
+  handleLoggedIn = (username) => {
+    console.log("Getting the user" + username);
+    const user = { name: "Mosh" }
+    this.setState({ currentUser: user })
+  }
 
   render() {
     const { user } = this.state
     return (
-      <React.Fragment>
-        <ToastContainer />
-        <MovieNavBar user={user} />
+      <UserContext.Provider value={{ currentUser: this.state.currentUser, onLoggedIn: this.handleLoggedIn }}>
+
+
+        <React.Fragment>
+          {/* <ToastContainer /> */}
+          {/* <MovieNavBar user={user} />
         <div className="container">
           <Switch>
             <Route path="/logout" component={Logout} />
@@ -91,14 +106,19 @@ class App extends Component {
             <Redirect from="/" exact to="/movies" />
             <Redirect to="/not-found" />
           </Switch>
-        </div>
+        </div> */}
+          {/* <MovieHOC /> */}
+          {/* <Counter /> */}
+          {/* <Users /> */}
+          <MoviePage />
+          <Login />
 
-
-        {/*<Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length} />
+          {/*<Navbar totalCounters={this.state.counters.filter(c => c.value > 0).length} />
          <main className="container">
           <Counters counters={this.state.counters} onReset={this.handleReset} onDelete={this.handleDelete} onIncrement={this.handleIncrement} onDecrement={this.handleDecrement} />
         </main> */}
-      </React.Fragment >
+        </React.Fragment >
+      </UserContext.Provider>
     );
   }
 }
